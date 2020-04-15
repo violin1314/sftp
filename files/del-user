@@ -1,0 +1,17 @@
+#!/bin/bash
+# Script to add a user to Linux system
+# -------------------------------------------------------------------------
+# Copyright (c) 2007 nixCraft project <http://bash.cyberciti.biz/>
+# This script is licensed under GNU GPL version 2.0 or above
+# Comment/suggestion: <vivek at nixCraft DOT com>
+# -------------------------------------------------------------------------
+# See url for more info:
+# http://www.cyberciti.biz/tips/howto-write-shell-script-to-add-user.html
+# -------------------------------------------------------------------------
+# Script for adding SFTP users. It will create the user, generate a password
+# and lock them into the sftp jail.
+# -------------------------------------------------------------------------
+
+rm -rf /home/$1
+sed -i -e /$1/d /etc/sftp/users.conf
+userdel -r $1

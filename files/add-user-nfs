@@ -1,0 +1,36 @@
+#!/bin/bash
+# Script to add a user to Linux system
+# -------------------------------------------------------------------------
+# Copyright (c) 2007 nixCraft project <http://bash.cyberciti.biz/>
+# This script is licensed under GNU GPL version 2.0 or above
+# Comment/suggestion: <vivek at nixCraft DOT com>
+# -------------------------------------------------------------------------
+# See url for more info:
+# http://www.cyberciti.biz/tips/howto-write-shell-script-to-add-user.html
+# docker build -t 192.168.112.99/sftp:6.1 .
+# Script for adding SFTP users. It will create the user, generate a password
+# and lock them into the sftp jail.
+# -------------------------------------------------------------------------
+if [ $(id -u) -eq 0 ]; then
+        #read -p "Enter username : " username
+        egrep "^$1" /etc/passwd >/dev/null
+        if [ $? -eq 0 ]; then
+                        echo "$1 exists!"
+                        exit 1
+        else
+            #password=$1
+                        #echo "The generated password is: "$password
+                        # Encrypt Password
+                        encryptedPassword=$(mkpasswd -m sha-512 $1)
+                        useradd -g users -p $encryptedPassword -d /home/$1  $1
+        [ $? -eq 0 ] && echo "User has been added to system!" || echo "Failed to add a user!"
+                                mkdir /home/$1/upload
+                                chmod 777 /home/$1/upload
+                                chmod 755 /home
+                                chmod 755 /home/$1
+                                echo $1:$1:::upload >>/etc/sftp/users.conf
+        fi
+else
+        echo "Only root may add a user to the system"
+        exit 2
+fi
